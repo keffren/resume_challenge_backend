@@ -1,5 +1,8 @@
 import unittest
 import boto3
+import json
+import getVisitorsCount
+import updateVisitorsCount
 
 class TestGet(unittest.TestCase):
 
@@ -40,6 +43,31 @@ class TestGet(unittest.TestCase):
             is_valid = False
         
         self.assertTrue(is_valid)
+
+    def test_getVisitorsCount_result(self):
+        """
+        Check the result of getVisitorsCount lambda function
+        """
+        request = getVisitorsCount.getVisitorsCount_handler(None, None)
+
+        self.assertEqual(request["statusCode"], 200)
+        self.assertEqual(request["headers"]["Content-Type"], "application/json")
+        self.assertIn("message", request["body"])
+
+    def test_updateVisitorsCount_result(self):
+        """
+        Check the result of updateVisitorsCount lambda function
+        """
+        event = {
+            "item_to_update": "visitorsNumber"
+        }
+
+        request = updateVisitorsCount.updateVisitorsCount_handler(event, None)
+
+        self.assertEqual(request["statusCode"], 200)
+        self.assertEqual(request["headers"]["Content-Type"], "application/json")
+        body_data = json.loads(request["body"])
+        self.assertIn("The visitors counter has been updated", body_data["message"])
 
 if __name__ == '__main__':
     unittest.main()
