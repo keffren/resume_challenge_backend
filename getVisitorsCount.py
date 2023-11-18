@@ -12,6 +12,8 @@ def getVisitorsCount_handler(event, context):
     
     #Get the counter value
     counter_value = int(item["Item"]["visitorsNumber"])
+
+    # Validate CodePipeLine's deploy stage 
     
     return {
         "statusCode": 200,
